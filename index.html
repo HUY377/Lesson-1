@@ -7,17 +7,43 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 40px;
-      max-width: 800px;
+      padding: 20px;
+      max-width: 900px;
       margin: auto;
       background-color: #f9f9f9;
       color: #333;
     }
     h1 {
       text-align: center;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    .language-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #e0e0e0;
+      border: none;
+      border-radius: 5px 5px 0 0;
+      margin-right: 5px;
+      font-weight: bold;
+    }
+    .tab.active {
+      background-color: #3498db;
+      color: white;
+    }
+    .quiz-container {
+      display: none;
+    }
+    .quiz-container.active {
+      display: block;
     }
     .question-block {
-      margin-bottom: 40px;
+      margin-bottom: 30px;
       padding: 20px;
       border-radius: 8px;
       background-color: #fff;
@@ -25,341 +51,826 @@
     }
     .question-text {
       font-weight: bold;
-    }
-    .hint {
-      color: #888;
-      font-size: 0.9em;
+      margin-bottom: 15px;
+      line-height: 1.5;
     }
     .answer-option {
       margin: 10px 0;
+      display: block;
+      padding: 8px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+    .answer-option:hover {
+      background-color: #f0f8ff;
     }
     .correct {
       color: green;
       font-weight: bold;
+      background-color: #e8f8e8;
     }
     .wrong {
       color: red;
+      background-color: #ffe8e8;
+    }
+    .rationale {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    .score-display {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    .reset-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    .reset-btn:hover {
+      background-color: #2980b9;
     }
   </style>
 </head>
 <body>
-  <h1>Bài tập trắc nghiệm</h1>
-  <div id="quiz-container"></div>
+  <h1>Bài tập từ vựng & ngữ pháp</h1>
+  
+  <div class="language-tabs">
+    <button class="tab active" onclick="switchTab('vietnamese')">Tiếng Việt</button>
+    <button class="tab" onclick="switchTab('english')">English</button>
+  </div>
+  
+  <div id="vietnamese-quiz" class="quiz-container active">
+    <div class="score-display" id="vn-score">Điểm: 0/10</div>
+    <div id="vn-questions"></div>
+    <button class="reset-btn" onclick="resetQuiz('vietnamese')">Làm lại bài</button>
+  </div>
+  
+  <div id="english-quiz" class="quiz-container">
+    <div class="score-display" id="en-score">Score: 0/15</div>
+    <div id="en-questions"></div>
+    <button class="reset-btn" onclick="resetQuiz('english')">Reset Quiz</button>
+  </div>
 
   <script>
-    const data = {
-      "questions": [{
-  "questions": [
-    {
-      "question": "Được biết đến với ______ ổn định và tính cách hướng ngoại, anh ấy thích các ______ xã hội, điều này giúp anh ấy ______ những kết nối bền chặt với mọi người.",
-      "answerOptions": [
+    // Vietnamese Quiz Data
+    const vietnameseData = {
+      "questions": [
         {
-          "text": "temperament / interactions / develop",
-          "rationale": "Sự kết hợp này hoàn toàn phù hợp về mặt ngữ nghĩa: tính khí (temperament) ổn định, tương tác (interactions) xã hội, và phát triển (develop) mối quan hệ.",
-          "isCorrect": true
+          "question": "Được biết đến với ______ ổn định và tính cách hướng ngoại, anh ấy thích các ______ xã hội, điều này giúp anh ấy ______ những kết nối bền chặt với mọi người.",
+          "answerOptions": [
+            {
+              "text": "temperament / interactions / develop",
+              "rationale": "Sự kết hợp này hoàn toàn phù hợp về mặt ngữ nghĩa: tính khí (temperament) ổn định, tương tác (interactions) xã hội, và phát triển (develop) mối quan hệ.",
+              "isCorrect": true
+            },
+            {
+              "text": "nature / conflicts / establish",
+              "rationale": "'Conflicts' (xung đột) không phù hợp với ngữ cảnh 'thích các ... xã hội'.",
+              "isCorrect": false
+            },
+            {
+              "text": "upbringing / rivalries / break down",
+              "rationale": "Các từ này không tạo thành một câu có nghĩa trong ngữ cảnh đã cho.",
+              "isCorrect": false
+            },
+            {
+              "text": "temperament / connections / endure",
+              "rationale": "Mặc dù 'temperament' và 'connections' có thể phù hợp, 'endure' (chịu đựng) các mối quan hệ không phải là cách diễn đạt tự nhiên trong câu này.",
+              "isCorrect": false
+            }
+          ]
         },
         {
-          "text": "nature / conflicts / establish",
-          "rationale": "'Conflicts' (xung đột) không phù hợp với ngữ cảnh 'thích các ... xã hội'.",
-          "isCorrect": false
+          "question": "Thừa hưởng ______ hài hước và có ______ nổi bật với một người mẫu, anh ấy không ngừng nỗ lực để phát triển kiến thức của mình.",
+          "answerOptions": [
+            {
+              "text": "nature / resemblance",
+              "rationale": "Câu này mô tả các đặc điểm được thừa hưởng: bản tính (nature) hài hước và sự giống nhau (resemblance) về ngoại hình.",
+              "isCorrect": true
+            },
+            {
+              "text": "instinct / bond",
+              "rationale": "'Instinct' (bản năng) và 'bond' (sự gắn kết) thường không được dùng để mô tả sự hài hước và ngoại hình.",
+              "isCorrect": false
+            },
+            {
+              "text": "childhood / friendship",
+              "rationale": "Câu này nói về đặc điểm cá nhân, không phải về một giai đoạn trong đời hay một mối quan hệ cụ thể.",
+              "isCorrect": false
+            },
+            {
+              "text": "temperament / relation",
+              "rationale": "Mặc dù 'temperament' có thể đúng, 'relation' (mối quan hệ) không phù hợp để chỉ sự giống nhau về ngoại hình.",
+              "isCorrect": false
+            }
+          ]
         },
         {
-          "text": "upbringing / rivalries / break down",
-          "rationale": "Các từ này không tạo thành một câu có nghĩa trong ngữ cảnh đã cho.",
-          "isCorrect": false
+          "question": "Với mục tiêu ______ một ______ thân thiết hơn, anh ấy tăng cường ______ với anh Huy bằng cách phản hồi tin nhắn thường xuyên hơn, qua đó củng cố ______ của họ.",
+          "answerOptions": [
+            {
+              "text": "establish / friendship / interaction / ties",
+              "rationale": "Thứ tự này logic: thiết lập (establish) tình bạn (friendship) qua tương tác (interaction) để củng cố mối liên kết (ties).",
+              "isCorrect": true
+            },
+            {
+              "text": "develop / conflict / resemblance / bond",
+              "rationale": "Việc tăng cường tương tác không nhằm mục đích 'phát triển xung đột' (develop conflict).",
+              "isCorrect": false
+            },
+            {
+              "text": "adopt / relationship / instinct / nature",
+              "rationale": "Các từ 'instinct' và 'nature' không phù hợp với ngữ cảnh xây dựng một mối quan hệ cụ thể.",
+              "isCorrect": false
+            },
+            {
+              "text": "endure / rivalry / connection / upbringing",
+              "rationale": "Toàn bộ chuỗi từ này không tạo ra một câu có ý nghĩa hợp lý.",
+              "isCorrect": false
+            }
+          ]
         },
         {
-          "text": "temperament / connections / endure",
-          "rationale": "Mặc dù 'temperament' và 'connections' có thể phù hợp, 'endure' (chịu đựng) các mối quan hệ không phải là cách diễn đạt tự nhiên trong câu này.",
-          "isCorrect": false
+          "question": "Đã ______ một thói quen ______ từ sự ______ tốt đẹp của mình, anh ấy luôn trung thực hoàn thành bài tập và thậm chí còn xin thêm.",
+          "answerOptions": [
+            {
+              "text": "adopt / rewarding / upbringing",
+              "rationale": "Câu này có nghĩa là: đã tiếp nhận (adopt) một thói quen bổ ích (rewarding) từ sự nuôi dưỡng (upbringing) tốt đẹp.",
+              "isCorrect": true
+            },
+            {
+              "text": "inherit / stubborn / fatherhood",
+              "rationale": "Một thói quen tốt không thể được mô tả là 'bướng bỉnh' (stubborn).",
+              "isCorrect": false
+            },
+            {
+              "text": "establish / close-knit / adolescence",
+              "rationale": "Không thể 'thiết lập một thói quen khăng khít'.",
+              "isCorrect": false
+            },
+            {
+              "text": "break down / parental / motherhood",
+              "rationale": "Cụm từ 'phá vỡ một thói quen của cha mẹ' không phù hợp với vế sau của câu.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "Nhớ lại sự ______ giữa các anh em từ thời ______, anh ấy cố gắng tránh ______ để các mối quan hệ của mình không bị ______.",
+          "answerOptions": [
+            {
+              "text": "rivalry / childhood / conflict / break down",
+              "rationale": "Sự kết hợp này mô tả một chuỗi logic: sự cạnh tranh (rivalry) thời thơ ấu (childhood) dẫn đến việc tránh xung đột (conflict) để mối quan hệ không tan vỡ (break down).",
+              "isCorrect": true
+            },
+            {
+              "text": "connection / adulthood / interaction / establish",
+              "rationale": "Người ta không 'tránh tương tác' (avoid interaction) để mối quan hệ không được 'thiết lập' (establish).",
+              "isCorrect": false
+            },
+            {
+              "text": "bond / teenager / friendship / endure",
+              "rationale": "Logic của câu này không hợp lý; không ai muốn tránh tình bạn.",
+              "isCorrect": false
+            },
+            {
+              "text": "resemblance / parenthood / rivalry / develop",
+              "rationale": "Các từ này không liên quan đến nhau một cách logic trong ngữ cảnh câu.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "Xuất thân từ một gia đình ______, anh ấy trân trọng ______ bền chặt và sự ______ ổn định mà cha mẹ đã mang lại.",
+          "answerOptions": [
+            {
+              "text": "close-knit / bond / parental",
+              "rationale": "Sự kết hợp này hoàn hảo: gia đình khăng khít (close-knit), sự gắn kết (bond) bền chặt và sự quan tâm của cha mẹ (parental).",
+              "isCorrect": true
+            },
+            {
+              "text": "stable / conflict / maternal",
+              "rationale": "Không ai trân trọng 'xung đột' (conflict) trong gia đình.",
+              "isCorrect": false
+            },
+            {
+              "text": "rewarding / relation / sibling",
+              "rationale": "Cụm từ 'sự quan tâm của anh chị em' (sibling guidance/care) sẽ hợp lý hơn là chỉ từ 'sibling'.",
+              "isCorrect": false
+            },
+            {
+              "text": "stubborn / ties / relative",
+              "rationale": "Một gia đình 'bướng bỉnh' (stubborn) không phải là một cách diễn đạt phổ biến và tích cực.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "Bước vào tuổi ______, anh ấy đã học cách ______ những xung đột để duy trì một ______ ổn định với họ hàng của mình.",
+          "answerOptions": [
+            {
+              "text": "adulthood / endure / relationship",
+              "rationale": "Đây là một kịch bản thực tế: bước vào tuổi trưởng thành (adulthood), học cách chịu đựng (endure) xung đột để duy trì mối quan hệ (relationship).",
+              "isCorrect": true
+            },
+            {
+              "text": "fatherhood / develop / rivalry",
+              "rationale": "Người ta thường không muốn 'phát triển sự cạnh tranh' (develop rivalry) với họ hàng.",
+              "isCorrect": false
+            },
+            {
+              "text": "adolescence / establish / resemblance",
+              "rationale": "Không thể 'thiết lập sự giống nhau' (establish resemblance).",
+              "isCorrect": false
+            },
+            {
+              "text": "childhood / break down / connection",
+              "rationale": "Không ai học cách 'phá vỡ kết nối' (break down connection) như một kỹ năng tích cực.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "Chàng ______ từng ______ ngày nào giờ đã học cách ______ những mối quan hệ tốt hơn thông qua ______ tích cực.",
+          "answerOptions": [
+            {
+              "text": "teenager / stubborn / develop / interaction",
+              "rationale": "Câu này mô tả sự thay đổi tích cực: một thiếu niên (teenager) bướng bỉnh (stubborn) học cách phát triển (develop) mối quan hệ qua tương tác (interaction).",
+              "isCorrect": true
+            },
+            {
+              "text": "parent / close / adopt / conflict",
+              "rationale": "'Tiếp nhận xung đột' (adopt conflict) không phải là một hành động tích cực để cải thiện quan hệ.",
+              "isCorrect": false
+            },
+            {
+              "text": "relative / rewarding / break down / bond",
+              "rationale": "Cụm 'phá vỡ sự gắn kết' (break down bond) trái ngược với ý nghĩa của câu.",
+              "isCorrect": false
+            },
+            {
+              "text": "sibling / stable / endure / ties",
+              "rationale": "Học cách 'chịu đựng mối liên kết' (endure ties) nghe có vẻ tiêu cực và không phù hợp.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "Tin rằng ______ của người cha trong việc tạo dựng một ______ bền chặt cũng mạnh mẽ như bản năng của người mẹ, anh ấy mong chờ trải nghiệm ______ của việc làm cha.",
+          "answerOptions": [
+            {
+              "text": "instinct / bond / maternal / fatherhood",
+              "rationale": "Sự kết hợp này rất logic: bản năng (instinct) của người cha, sự gắn kết (bond), so sánh với bản năng của người mẹ (maternal), và cuối cùng là thiên chức làm cha (fatherhood).",
+              "isCorrect": true
+            },
+            {
+              "text": "nature / relation / parental / motherhood",
+              "rationale": "Câu này so sánh bản năng của cha và mẹ, nên dùng 'maternal' sẽ chính xác hơn 'parental'.",
+              "isCorrect": false
+            },
+            {
+              "text": "temperament / ties / sibling / upbringing",
+              "rationale": "Các từ được chọn không phù hợp với chủ đề về bản năng làm cha mẹ.",
+              "isCorrect": false
+            },
+            {
+              "text": "upbringing / connection / rewarding / conflict",
+              "rationale": "Toàn bộ chuỗi từ này không tạo thành một câu có ý nghĩa mạch lạc.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "Sở hữu ______, anh ấy thường xuyên đóng góp ý kiến để ______ những kết nối gần gũi hơn trong các ______ xã hội.",
+          "answerOptions": [
+            {
+              "text": "an extroverted temperament / establish / interactions",
+              "rationale": "Đây là một câu hoàn chỉnh về mặt ngữ pháp và ý nghĩa, sử dụng cụm danh từ 'an extroverted temperament'.",
+              "isCorrect": true
+            },
+            {
+              "text": "a close-knit nature / accommodate / conflicts",
+              "rationale": "'Accommodate conflicts' (chấp nhận xung đột) không phải là mục tiêu chính khi đóng góp ý kiến.",
+              "isCorrect": false
+            },
+            {
+              "text": "a stable upbringing / break down / relations",
+              "rationale": "Mục tiêu không phải là 'phá vỡ các mối quan hệ' (break down relations).",
+              "isCorrect": false
+            },
+            {
+              "text": "a rewarding friendship / endure / rivalries",
+              "rationale": "Việc đóng góp ý kiến không nhằm mục đích 'chịu đựng sự cạnh tranh' (endure rivalries).",
+              "isCorrect": false
+            }
+          ]
         }
-      ],
-      "hint": "Câu này mô tả một người hướng ngoại, hãy chọn các từ liên quan đến tính cách và việc xây dựng mối quan hệ."
-    },
-    {
-      "question": "Thừa hưởng ______ hài hước và có ______ nổi bật với một người mẫu, anh ấy không ngừng nỗ lực để phát triển kiến thức của mình.",
-      "answerOptions": [
-        {
-          "text": "nature / resemblance",
-          "rationale": "Câu này mô tả các đặc điểm được thừa hưởng: bản tính (nature) hài hước và sự giống nhau (resemblance) về ngoại hình.",
-          "isCorrect": true
-        },
-        {
-          "text": "instinct / bond",
-          "rationale": "'Instinct' (bản năng) và 'bond' (sự gắn kết) thường không được dùng để mô tả sự hài hước và ngoại hình.",
-          "isCorrect": false
-        },
-        {
-          "text": "childhood / friendship",
-          "rationale": "Câu này nói về đặc điểm cá nhân, không phải về một giai đoạn trong đời hay một mối quan hệ cụ thể.",
-          "isCorrect": false
-        },
-        {
-          "text": "temperament / relation",
-          "rationale": "Mặc dù 'temperament' có thể đúng, 'relation' (mối quan hệ) không phù hợp để chỉ sự giống nhau về ngoại hình.",
-          "isCorrect": false
-        }
-      ],
-      "hint": "Cấu trúc câu 'Inheriting...' (Thừa hưởng...) là một dạng rút gọn mệnh đề quan hệ."
-    },
-    {
-      "question": "Với mục tiêu ______ một ______ thân thiết hơn, anh ấy tăng cường ______ với anh Huy bằng cách phản hồi tin nhắn thường xuyên hơn, qua đó củng cố ______ của họ.",
-      "answerOptions": [
-        {
-          "text": "establish / friendship / interaction / ties",
-          "rationale": "Thứ tự này logic: thiết lập (establish) tình bạn (friendship) qua tương tác (interaction) để củng cố mối liên kết (ties).",
-          "isCorrect": true
-        },
-        {
-          "text": "develop / conflict / resemblance / bond",
-          "rationale": "Việc tăng cường tương tác không nhằm mục đích 'phát triển xung đột' (develop conflict).",
-          "isCorrect": false
-        },
-        {
-          "text": "adopt / relationship / instinct / nature",
-          "rationale": "Các từ 'instinct' và 'nature' không phù hợp với ngữ cảnh xây dựng một mối quan hệ cụ thể.",
-          "isCorrect": false
-        },
-        {
-          "text": "endure / rivalry / connection / upbringing",
-          "rationale": "Toàn bộ chuỗi từ này không tạo ra một câu có ý nghĩa hợp lý.",
-          "isCorrect": false
-        }
-      ],
-      "hint": "Hãy suy nghĩ về các bước cần thiết để xây dựng và củng cố một tình bạn."
-    },
-    {
-      "question": "Đã ______ một thói quen ______ từ sự ______ tốt đẹp của mình, anh ấy luôn trung thực hoàn thành bài tập và thậm chí còn xin thêm.",
-      "answerOptions": [
-        {
-          "text": "adopt / rewarding / upbringing",
-          "rationale": "Câu này có nghĩa là: đã tiếp nhận (adopt) một thói quen bổ ích (rewarding) từ sự nuôi dưỡng (upbringing) tốt đẹp.",
-          "isCorrect": true
-        },
-        {
-          "text": "inherit / stubborn / fatherhood",
-          "rationale": "Một thói quen tốt không thể được mô tả là 'bướng bỉnh' (stubborn).",
-          "isCorrect": false
-        },
-        {
-          "text": "establish / close-knit / adolescence",
-          "rationale": "Không thể 'thiết lập một thói quen khăng khít'.",
-          "isCorrect": false
-        },
-        {
-          "text": "break down / parental / motherhood",
-          "rationale": "Cụm từ 'phá vỡ một thói quen của cha mẹ' không phù hợp với vế sau của câu.",
-          "isCorrect": false
-        }
-      ],
-      "hint": "Cấu trúc 'Having adopted...' là một mệnh đề phân từ hoàn thành, chỉ một hành động đã xảy ra trước hành động chính."
-    },
-    {
-      "question": "Nhớ lại sự ______ giữa các anh em từ thời ______, anh ấy cố gắng tránh ______ để các mối quan hệ của mình không bị ______.",
-      "answerOptions": [
-        {
-          "text": "rivalry / childhood / conflict / break down",
-          "rationale": "Sự kết hợp này mô tả một chuỗi logic: sự cạnh tranh (rivalry) thời thơ ấu (childhood) dẫn đến việc tránh xung đột (conflict) để mối quan hệ không tan vỡ (break down).",
-          "isCorrect": true
-        },
-        {
-          "text": "connection / adulthood / interaction / establish",
-          "rationale": "Người ta không 'tránh tương tác' (avoid interaction) để mối quan hệ không được 'thiết lập' (establish).",
-          "isCorrect": false
-        },
-        {
-          "text": "bond / teenager / friendship / endure",
-          "rationale": "Logic của câu này không hợp lý; không ai muốn tránh tình bạn.",
-          "isCorrect": false
-        },
-        {
-          "text": "resemblance / parenthood / rivalry / develop",
-          "rationale": "Các từ này không liên quan đến nhau một cách logic trong ngữ cảnh câu.",
-          "isCorrect": false
-        }
-      ],
-      "hint": "Câu này nói về việc rút kinh nghiệm từ những trải nghiệm trong quá khứ."
-    },
-    {
-      "question": "Xuất thân từ một gia đình ______, anh ấy trân trọng ______ bền chặt và sự ______ ổn định mà cha mẹ đã mang lại.",
-      "answerOptions": [
-        {
-          "text": "close-knit / bond / parental",
-          "rationale": "Sự kết hợp này hoàn hảo: gia đình khăng khít (close-knit), sự gắn kết (bond) bền chặt và sự quan tâm của cha mẹ (parental).",
-          "isCorrect": true
-        },
-        {
-          "text": "stable / conflict / maternal",
-          "rationale": "Không ai trân trọng 'xung đột' (conflict) trong gia đình.",
-          "isCorrect": false
-        },
-        {
-          "text": "rewarding / relation / sibling",
-          "rationale": "Cụm từ 'sự quan tâm của anh chị em' (sibling guidance/care) sẽ hợp lý hơn là chỉ từ 'sibling'.",
-          "isCorrect": false
-        },
-        {
-          "text": "stubborn / ties / relative",
-          "rationale": "Một gia đình 'bướng bỉnh' (stubborn) không phải là một cách diễn đạt phổ biến và tích cực.",
-          "isCorrect": false
-        }
-      ],
-      "hint": "Cấu trúc 'Coming from...' (Xuất thân từ...) là một mệnh đề phân từ."
-    },
-    {
-      "question": "Bước vào tuổi ______, anh ấy đã học cách ______ những xung đột để duy trì một ______ ổn định với họ hàng của mình.",
-      "answerOptions": [
-        {
-          "text": "adulthood / endure / relationship",
-          "rationale": "Đây là một kịch bản thực tế: bước vào tuổi trưởng thành (adulthood), học cách chịu đựng (endure) xung đột để duy trì mối quan hệ (relationship).",
-          "isCorrect": true
-        },
-        {
-          "text": "fatherhood / develop / rivalry",
-          "rationale": "Người ta thường không muốn 'phát triển sự cạnh tranh' (develop rivalry) với họ hàng.",
-          "isCorrect": false
-        },
-        {
-          "text": "adolescence / establish / resemblance",
-          "rationale": "Không thể 'thiết lập sự giống nhau' (establish resemblance).",
-          "isCorrect": false
-        },
-        {
-          "text": "childhood / break down / connection",
-          "rationale": "Không ai học cách 'phá vỡ kết nối' (break down connection) như một kỹ năng tích cực.",
-          "isCorrect": false
-        }
-      ],
-      "hint": "Hãy xem xét các giai đoạn của cuộc đời và những thách thức đi kèm."
-    },
-    {
-      "question": "Chàng ______ từng ______ ngày nào giờ đã học cách ______ những mối quan hệ tốt hơn thông qua ______ tích cực.",
-      "answerOptions": [
-        {
-          "text": "teenager / stubborn / develop / interaction",
-          "rationale": "Câu này mô tả sự thay đổi tích cực: một thiếu niên (teenager) bướng bỉnh (stubborn) học cách phát triển (develop) mối quan hệ qua tương tác (interaction).",
-          "isCorrect": true
-        },
-        {
-          "text": "parent / close / adopt / conflict",
-          "rationale": "'Tiếp nhận xung đột' (adopt conflict) không phải là một hành động tích cực để cải thiện quan hệ.",
-          "isCorrect": false
-        },
-        {
-          "text": "relative / rewarding / break down / bond",
-          "rationale": "Cụm 'phá vỡ sự gắn kết' (break down bond) trái ngược với ý nghĩa của câu.",
-          "isCorrect": false
-        },
-        {
-          "text": "sibling / stable / endure / ties",
-          "rationale": "Học cách 'chịu đựng mối liên kết' (endure ties) nghe có vẻ tiêu cực và không phù hợp.",
-          "isCorrect": false
-        }
-      ],
-      "hint": "Câu này mô tả sự trưởng thành và thay đổi trong tính cách."
-    },
-    {
-      "question": "Tin rằng ______ của người cha trong việc tạo dựng một ______ bền chặt cũng mạnh mẽ như bản năng của người mẹ, anh ấy mong chờ trải nghiệm ______ của việc làm cha.",
-      "answerOptions": [
-        {
-          "text": "instinct / bond / maternal / fatherhood",
-          "rationale": "Sự kết hợp này rất logic: bản năng (instinct) của người cha, sự gắn kết (bond), so sánh với bản năng của người mẹ (maternal), và cuối cùng là thiên chức làm cha (fatherhood).",
-          "isCorrect": true
-        },
-        {
-          "text": "nature / relation / parental / motherhood",
-          "rationale": "Câu này so sánh bản năng của cha và mẹ, nên dùng 'maternal' sẽ chính xác hơn 'parental'.",
-          "isCorrect": false
-        },
-        {
-          "text": "temperament / ties / sibling / upbringing",
-          "rationale": "Các từ được chọn không phù hợp với chủ đề về bản năng làm cha mẹ.",
-          "isCorrect": false
-        },
-        {
-          "text": "upbringing / connection / rewarding / conflict",
-          "rationale": "Toàn bộ chuỗi từ này không tạo thành một câu có ý nghĩa mạch lạc.",
-          "isCorrect": false
-        }
-      ],
-      "hint": "Câu này so sánh vai trò và bản năng của người cha và người mẹ."
-    },
-    {
-      "question": "Sở hữu ______, anh ấy thường xuyên đóng góp ý kiến để ______ những kết nối gần gũi hơn trong các ______ xã hội.",
-      "answerOptions": [
-        {
-          "text": "an extroverted temperament / establish / interactions",
-          "rationale": "Đây là một câu hoàn chỉnh về mặt ngữ pháp và ý nghĩa, sử dụng cụm danh từ 'an extroverted temperament'.",
-          "isCorrect": true
-        },
-        {
-          "text": "a close-knit nature / accommodate / conflicts",
-          "rationale": "'Accommodate conflicts' (chấp nhận xung đột) không phải là mục tiêu chính khi đóng góp ý kiến.",
-          "isCorrect": false
-        },
-        {
-          "text": "a stable upbringing / break down / relations",
-          "rationale": "Mục tiêu không phải là 'phá vỡ các mối quan hệ' (break down relations).",
-          "isCorrect": false
-        },
-        {
-          "text": "a rewarding friendship / endure / rivalries",
-          "rationale": "Việc đóng góp ý kiến không nhằm mục đích 'chịu đựng sự cạnh tranh' (endure rivalries).",
-          "isCorrect": false
-        }
-      ],
-      "hint": "Câu này cần một cụm danh từ ở chỗ trống đầu tiên để mô tả tính cách."
-    }
-  ]
-}
-]
+      ]
     };
 
-    const container = document.getElementById("quiz-container");
+    // English Quiz Data
+    const englishData = {
+      "questions": [
+        {
+          "question": "Known for his careful driving and extroverted personality, he easily ______ a ______ with new people through positive ______.",
+          "answerOptions": [
+            {
+              "text": "establishes / connection / interactions",
+              "rationale": "This combination is semantically correct: establishes (creates) a connection with people through positive interactions.",
+              "isCorrect": true
+            },
+            {
+              "text": "breaks / relationship / conflicts",
+              "rationale": "The context doesn't support breaking relationships or having conflicts when meeting new people.",
+              "isCorrect": false
+            },
+            {
+              "text": "avoids / bond / resemblance",
+              "rationale": "An extroverted person wouldn't avoid bonds, and 'resemblance' doesn't fit in this context.",
+              "isCorrect": false
+            },
+            {
+              "text": "develops / rivalry / upbringing",
+              "rationale": "Developing rivalries contradicts the positive nature implied in the sentence.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "______ the habit of using spaced repetition, he finds learning new knowledge and reinforcing his academic ______ a rewarding ______.",
+          "answerOptions": [
+            {
+              "text": "Adopting / foundation / experience",
+              "rationale": "The correct sequence: Adopting (taking on) the habit, reinforcing academic foundation, resulting in a rewarding experience.",
+              "isCorrect": true
+            },
+            {
+              "text": "Breaking / ties / conflict",
+              "rationale": "Breaking a habit wouldn't lead to a rewarding experience in this context.",
+              "isCorrect": false
+            },
+            {
+              "text": "Establishing / rivalry / upbringing",
+              "rationale": "One doesn't establish a habit of spaced repetition to create academic rivalry.",
+              "isCorrect": false
+            },
+            {
+              "text": "Inheriting / bond / resemblance",
+              "rationale": "Habits of study techniques are typically not inherited but developed.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "Desiring to ______ a ______ and sustainable friendship, he ensures his ______ with Huy are always frequent and meaningful.",
+          "answerOptions": [
+            {
+              "text": "develop / strong / interactions",
+              "rationale": "This combination logically flows: develop (build) a strong friendship through frequent and meaningful interactions.",
+              "isCorrect": true
+            },
+            {
+              "text": "avoid / close / conflicts",
+              "rationale": "The sentence expresses a desire to build, not avoid, a friendship.",
+              "isCorrect": false
+            },
+            {
+              "text": "endure / stable / rivalries",
+              "rationale": "One doesn't endure rivalries to build a sustainable friendship.",
+              "isCorrect": false
+            },
+            {
+              "text": "establish / broken / resemblance",
+              "rationale": "A 'broken' friendship contradicts the desire for a sustainable one.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "A man with a wonderful sense of humor and a striking ______ with his handsome father, he naturally attracts people.",
+          "answerOptions": [
+            {
+              "text": "resemblance",
+              "rationale": "'Resemblance' (similarity in appearance) is the correct word to describe physical similarity with his father.",
+              "isCorrect": true
+            },
+            {
+              "text": "conflict",
+              "rationale": "Having a conflict with his father wouldn't help him naturally attract people.",
+              "isCorrect": false
+            },
+            {
+              "text": "rivalry",
+              "rationale": "A rivalry with his father doesn't fit the positive context of the sentence.",
+              "isCorrect": false
+            },
+            {
+              "text": "upbringing",
+              "rationale": "One doesn't have an 'upbringing with' someone; it's something you receive, not share.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "Having a good ______ from a ______ family, he values the strong ______ between each family ______.",
+          "answerOptions": [
+            {
+              "text": "upbringing / close-knit / bonds / member",
+              "rationale": "This combination creates a coherent sentence: good upbringing from a close-knit family, valuing bonds between family members.",
+              "isCorrect": true
+            },
+            {
+              "text": "temperament / broken / conflicts / relative",
+              "rationale": "A broken family with conflicts doesn't align with valuing strong relationships.",
+              "isCorrect": false
+            },
+            {
+              "text": "nature / stable / rivalries / sibling",
+              "rationale": "One doesn't typically value rivalries between family members.",
+              "isCorrect": false
+            },
+            {
+              "text": "instinct / rewarding / resemblance / parent",
+              "rationale": "While 'rewarding family' could work, 'resemblance between parents' doesn't complete the sentence logically.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "With the skill to give opinions without causing ______, he can ______ different viewpoints to maintain a stable relationship.",
+          "answerOptions": [
+            {
+              "text": "conflict / accommodate",
+              "rationale": "The correct pairing: causing conflict (disagreement) and accommodate (adjust to) different viewpoints.",
+              "isCorrect": true
+            },
+            {
+              "text": "bonds / break down",
+              "rationale": "Breaking down bonds contradicts maintaining a stable relationship.",
+              "isCorrect": false
+            },
+            {
+              "text": "resemblance / establish",
+              "rationale": "One doesn't 'establish viewpoints' or cause 'resemblance' when giving opinions.",
+              "isCorrect": false
+            },
+            {
+              "text": "rivalry / endure",
+              "rationale": "Enduring rivalry wouldn't help maintain a stable relationship.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "Entering ______, he realized that sometimes he must ______ difficult situations to prevent important ______ from ______.",
+          "answerOptions": [
+            {
+              "text": "adulthood / endure / relationships / breaking down",
+              "rationale": "This sequence logically describes maturity: entering adulthood, enduring difficulties to prevent relationships from breaking down.",
+              "isCorrect": true
+            },
+            {
+              "text": "childhood / avoid / bonds / establishing",
+              "rationale": "Children typically don't have the maturity to understand these complex relationship dynamics.",
+              "isCorrect": false
+            },
+            {
+              "text": "fatherhood / develop / conflicts / strengthening",
+              "rationale": "Developing conflicts contradicts the goal of preventing something negative.",
+              "isCorrect": false
+            },
+            {
+              "text": "adolescence / break down / rivalries / enduring",
+              "rationale": "Breaking down rivalries wouldn't be framed as preventing something important.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "The ______ who was once ______ has matured, realizing that a strong family ______ is more important than winning every argument.",
+          "answerOptions": [
+            {
+              "text": "teenager / stubborn / bond",
+              "rationale": "This creates a coherent narrative: a once stubborn teenager has matured and now values family bonds over winning arguments.",
+              "isCorrect": true
+            },
+            {
+              "text": "adult / cooperative / conflict",
+              "rationale": "Being cooperative doesn't typically require maturing beyond it to value family.",
+              "isCorrect": false
+            },
+            {
+              "text": "child / extroverted / resemblance",
+              "rationale": "Extroversion isn't typically something one matures beyond, and resemblance isn't more important than winning arguments.",
+              "isCorrect": false
+            },
+            {
+              "text": "parent / responsible / rivalry",
+              "rationale": "The sentence structure suggests someone maturing from a negative trait, which responsibility isn't.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "Looking back at the ______ between siblings from ______, he now has a very ______ friendship with his ______.",
+          "answerOptions": [
+            {
+              "text": "rivalry / childhood / close / brother",
+              "rationale": "This creates a complete narrative: reflecting on childhood rivalry that has transformed into a close friendship with his brother.",
+              "isCorrect": true
+            },
+            {
+              "text": "bond / adulthood / stable / parent",
+              "rationale": "One wouldn't typically look back at bonds from adulthood as something in the past.",
+              "isCorrect": false
+            },
+            {
+              "text": "resemblance / fatherhood / rewarding / sister",
+              "rationale": "Resemblance isn't typically something that changes or develops over time like relationships do.",
+              "isCorrect": false
+            },
+            {
+              "text": "conflict / adolescence / broken / cousin",
+              "rationale": "Having a broken friendship contradicts the positive transformation implied in the sentence.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "He believes that a father's ______ is a tremendous strength, creating a lifelong ______ between a ______ and his child long before ______ actually begins.",
+          "answerOptions": [
+            {
+              "text": "instinct / bond / parent / fatherhood",
+              "rationale": "This sequence logically describes paternal connection: a father's instinct creates a bond between parent and child before fatherhood officially begins.",
+              "isCorrect": true
+            },
+            {
+              "text": "upbringing / resemblance / sibling / parenthood",
+              "rationale": "Upbringing is something given, not an inherent strength, and siblings don't experience parenthood together.",
+              "isCorrect": false
+            },
+            {
+              "text": "temperament / conflict / relative / adulthood",
+              "rationale": "Creating conflict wouldn't be described as a tremendous strength in this context.",
+              "isCorrect": false
+            },
+            {
+              "text": "nature / rivalry / teenager / childhood",
+              "rationale": "Rivalry isn't typically portrayed as positive or as creating lifelong connections.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "As a trait shaped by strong ______ guidance, his honesty is central to every ______ he builds.",
+          "answerOptions": [
+            {
+              "text": "parental / relationship",
+              "rationale": "This pairing is most logical: parental guidance shapes honesty, which is central to relationships.",
+              "isCorrect": true
+            },
+            {
+              "text": "sibling / conflict",
+              "rationale": "Honesty wouldn't be central to conflicts one builds.",
+              "isCorrect": false
+            },
+            {
+              "text": "maternal / rivalry",
+              "rationale": "Honesty isn't typically central to rivalries one builds.",
+              "isCorrect": false
+            },
+            {
+              "text": "childhood / resemblance",
+              "rationale": "One doesn't 'build' resemblances, and childhood isn't a type of guidance.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "Overcoming the emotional ups and downs of ______, he has developed a much more stable and predictable ______.",
+          "answerOptions": [
+            {
+              "text": "adolescence / temperament",
+              "rationale": "This is the most logical pairing: adolescence is known for emotional ups and downs, which can lead to developing a more stable temperament.",
+              "isCorrect": true
+            },
+            {
+              "text": "adulthood / upbringing",
+              "rationale": "Upbringing is something received in childhood, not developed in adulthood.",
+              "isCorrect": false
+            },
+            {
+              "text": "fatherhood / instinct",
+              "rationale": "While fatherhood can be emotional, it's not typically characterized as having 'ups and downs' that lead to developing instinct.",
+              "isCorrect": false
+            },
+            {
+              "text": "childhood / resemblance",
+              "rationale": "Resemblance is physical and not typically developed through overcoming emotional challenges.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "While ______ instinct is often discussed, he feels the journey to fatherhood (______) brings an equally profound and ______ experience.",
+          "answerOptions": [
+            {
+              "text": "maternal / fatherhood / rewarding",
+              "rationale": "This creates a balanced comparison: while maternal instinct is often discussed, fatherhood also brings a rewarding experience.",
+              "isCorrect": true
+            },
+            {
+              "text": "parental / parenthood / challenging",
+              "rationale": "This creates redundancy (parental/parenthood) and doesn't create the contrast implied in the sentence.",
+              "isCorrect": false
+            },
+            {
+              "text": "paternal / childhood / stable",
+              "rationale": "Fatherhood and childhood are different life stages that can't be equated in this context.",
+              "isCorrect": false
+            },
+            {
+              "text": "sibling / adulthood / broken",
+              "rationale": "Sibling instinct isn't commonly discussed, and a broken experience isn't portrayed as positive.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "To keep the family ______ strong, he makes an effort to visit everyone ______ and not let minor disagreements ______ the connection.",
+          "answerOptions": [
+            {
+              "text": "bond / regularly / break",
+              "rationale": "This creates a coherent sentence: keeping the family bond strong by visiting regularly and not letting disagreements break the connection.",
+              "isCorrect": true
+            },
+            {
+              "text": "conflict / occasionally / strengthen",
+              "rationale": "One wouldn't want to keep conflict strong or strengthen it through disagreements.",
+              "isCorrect": false
+            },
+            {
+              "text": "resemblance / rarely / establish",
+              "rationale": "Resemblance is physical and can't be kept strong through visits, and rare visits wouldn't establish connections.",
+              "isCorrect": false
+            },
+            {
+              "text": "rivalry / frequently / endure",
+              "rationale": "One wouldn't typically want to keep family rivalry strong.",
+              "isCorrect": false
+            }
+          ]
+        },
+        {
+          "question": "He decided to ______ a more open communication style, hoping to ______ a better ______ with his somewhat introverted brother.",
+          "answerOptions": [
+            {
+              "text": "adopt / establish / relationship",
+              "rationale": "This sequence is most logical: adopt (take on) a communication style to establish (build) a better relationship.",
+              "isCorrect": true
+            },
+            {
+              "text": "avoid / break / bond",
+              "rationale": "Avoiding a communication style wouldn't help build a better relationship.",
+              "isCorrect": false
+            },
+            {
+              "text": "develop / endure / conflict",
+              "rationale": "Enduring conflict isn't a desirable goal when trying to improve a relationship.",
+              "isCorrect": false
+            },
+            {
+              "text": "inherit / strengthen / rivalry",
+              "rationale": "Communication styles aren't inherited, and strengthening rivalry contradicts the goal of improving a relationship.",
+              "isCorrect": false
+            }
+          ]
+        }
+      ]
+    };
 
-    data.questions.forEach((q, index) => {
-      const block = document.createElement("div");
-      block.className = "question-block";
+    // Initialize scores
+    let vnScore = 0;
+    let enScore = 0;
+    let vnAnswered = new Array(vietnameseData.questions.length).fill(false);
+    let enAnswered = new Array(englishData.questions.length).fill(false);
 
-      const qText = document.createElement("div");
-      qText.className = "question-text";
-      qText.textContent = `Câu ${index + 1}: ${q.question}`;
-      block.appendChild(qText);
-
-      q.answerOptions.forEach(opt => {
-        const label = document.createElement("label");
-        label.className = "answer-option";
-
-        const radio = document.createElement("input");
-        radio.type = "radio";
-        radio.name = `q${index}`;
-        radio.value = opt.text;
-
-        radio.onclick = () => {
-          const all = block.querySelectorAll("label");
-          all.forEach(l => l.classList.remove("correct", "wrong"));
-          if (opt.isCorrect) {
-            label.classList.add("correct");
-          } else {
-            label.classList.add("wrong");
-          }
-        };
-
-        label.appendChild(radio);
-        label.append(" " + opt.text);
-        block.appendChild(label);
-
-        // rationale as tooltip (optional)
-        label.title = opt.rationale;
+    // Function to switch between tabs
+    function switchTab(language) {
+      // Update tab buttons
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
       });
+      event.target.classList.add('active');
+      
+      // Update quiz containers
+      document.querySelectorAll('.quiz-container').forEach(container => {
+        container.classList.remove('active');
+      });
+      
+      if (language === 'vietnamese') {
+        document.getElementById('vietnamese-quiz').classList.add('active');
+      } else {
+        document.getElementById('english-quiz').classList.add('active');
+      }
+    }
 
-      const hint = document.createElement("div");
-      hint.className = "hint";
-      hint.textContent = `Gợi ý: ${q.hint}`;
-      block.appendChild(hint);
+    // Function to render a quiz
+    function renderQuiz(containerId, data, scoreId, answeredArray, scoreVar) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      
+      data.questions.forEach((q, index) => {
+        const block = document.createElement("div");
+        block.className = "question-block";
+        
+        const qText = document.createElement("div");
+        qText.className = "question-text";
+        qText.textContent = `Câu ${index + 1}: ${q.question}`;
+        block.appendChild(qText);
+        
+        q.answerOptions.forEach(opt => {
+          const label = document.createElement("label");
+          label.className = "answer-option";
+          
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `${containerId}-q${index}`;
+          radio.value = opt.text;
+          
+          radio.onclick = function() {
+            // Mark question as answered
+            answeredArray[index] = true;
+            
+            // Update score
+            if (opt.isCorrect) {
+              if (containerId === 'vn-questions') {
+                vnScore++;
+                document.getElementById('vn-score').textContent = `Điểm: ${vnScore}/10`;
+              } else {
+                enScore++;
+                document.getElementById('en-score').textContent = `Score: ${enScore}/15`;
+              }
+            }
+            
+            // Update UI
+            const allOptions = block.querySelectorAll("label");
+            allOptions.forEach(l => {
+              l.classList.remove("correct", "wrong");
+              const rationale = l.querySelector('.rationale');
+              if (rationale) rationale.remove();
+            });
+            
+            if (opt.isCorrect) {
+              label.classList.add("correct");
+            } else {
+              label.classList.add("wrong");
+            }
+            
+            // Add rationale
+            const rationale = document.createElement("div");
+            rationale.className = "rationale";
+            rationale.textContent = opt.rationale;
+            label.appendChild(rationale);
+          };
+          
+          label.appendChild(radio);
+          label.append(` ${opt.text}`);
+          block.appendChild(label);
+        });
+        
+        container.appendChild(block);
+      });
+    }
 
-      container.appendChild(block);
-    });
+    // Function to reset a quiz
+    function resetQuiz(language) {
+      if (language === 'vietnamese') {
+        vnScore = 0;
+        vnAnswered = new Array(vietnameseData.questions.length).fill(false);
+        document.getElementById('vn-score').textContent = 'Điểm: 0/10';
+        renderQuiz('vn-questions', vietnameseData, 'vn-score', vnAnswered, vnScore);
+      } else {
+        enScore = 0;
+        enAnswered = new Array(englishData.questions.length).fill(false);
+        document.getElementById('en-score').textContent = 'Score: 0/15';
+        renderQuiz('en-questions', englishData, 'en-score', enAnswered, enScore);
+      }
+    }
+
+    // Initial render
+    renderQuiz('vn-questions', vietnameseData, 'vn-score', vnAnswered, vnScore);
+    renderQuiz('en-questions', englishData, 'en-score', enAnswered, enScore);
   </script>
 </body>
 </html>
