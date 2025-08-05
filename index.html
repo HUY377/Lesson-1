@@ -64,6 +64,10 @@
     .answer-option:hover {
       background-color: #f0f8ff;
     }
+    .answer-option.answered {
+      pointer-events: none;
+      opacity: 0.8;
+    }
     .correct {
       color: green;
       font-weight: bold;
@@ -98,6 +102,11 @@
     }
     .reset-btn:hover {
       background-color: #2980b9;
+    }
+    .answered-indicator {
+      font-size: 0.8em;
+      color: #666;
+      margin-left: 10px;
     }
   </style>
 </head>
@@ -759,7 +768,7 @@
       ]
     };
 
-    // Initialize scores
+    // Initialize scores and tracking arrays
     let vnScore = 0;
     let enScore = 0;
     let vnAnswered = new Array(vietnameseData.questions.length).fill(false);
@@ -796,19 +805,41 @@
         
         const qText = document.createElement("div");
         qText.className = "question-text";
-        qText.textContent = `Câu ${index + 1}: ${q.question}`;
+        qText.textContent = containerId === 'vn-questions' ? `Câu ${index + 1}: ${q.question}` : `Question ${index + 1}: ${q.question}`;
+        
+        // Add answered indicator
+        const indicator = document.createElement("span");
+        indicator.className = "answered-indicator";
+        indicator.textContent = answeredArray[index] ? "✓ Đã trả lời" : "";
+        qText.appendChild(indicator);
+        
         block.appendChild(qText);
         
         q.answerOptions.forEach(opt => {
           const label = document.createElement("label");
           label.className = "answer-option";
           
+          // If question is already answered, disable all options
+          if (answeredArray[index]) {
+            label.classList.add("answered");
+          }
+          
           const radio = document.createElement("input");
           radio.type = "radio";
           radio.name = `${containerId}-q${index}`;
           radio.value = opt.text;
           
+          // Disable radio if question is already answered
+          if (answeredArray[index]) {
+            radio.disabled = true;
+          }
+          
           radio.onclick = function() {
+            // If question is already answered, do nothing
+            if (answeredArray[index]) {
+              return;
+            }
+            
             // Mark question as answered
             answeredArray[index] = true;
             
@@ -826,7 +857,10 @@
             // Update UI
             const allOptions = block.querySelectorAll("label");
             allOptions.forEach(l => {
-              l.classList.remove("correct", "wrong");
+              l.classList.add("answered");
+              const radioInput = l.querySelector("input");
+              radioInput.disabled = true;
+              
               const rationale = l.querySelector('.rationale');
               if (rationale) rationale.remove();
             });
@@ -842,6 +876,9 @@
             rationale.className = "rationale";
             rationale.textContent = opt.rationale;
             label.appendChild(rationale);
+            
+            // Update indicator
+            indicator.textContent = "✓ Đã trả lời";
           };
           
           label.appendChild(radio);
