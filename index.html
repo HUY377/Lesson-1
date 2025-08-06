@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trang chủ - Bài Tập Tiếng Anh</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 1000px;
+      width: 90%;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      text-align: center;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      color: #2c3e50;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      color: #7f8c8d;
+      margin-bottom: 40px;
+    }
+    
+    .lessons-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+    
+    .lesson-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      width: 300px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    
+    .lesson-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .lesson-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+    
+    .lesson-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+    
+    .lesson-description {
+      color: #7f8c8d;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    
+    .start-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .start-btn:hover {
+      background-color: #2980b9;
+    }
+    
+    .footer {
+      margin-top: 30px;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .lessons-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .lesson-card {
+        width: 100%;
+        max-width: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Thấy Anh Ngầu VL Không</h1>
+    <p class="subtitle">Tiếng Anh là nghề phụ coder mới là chính</p>
+    
+    <div class="lessons-container">
+      <div class="lesson-card" onclick="goToLesson(1)">
+        <div class="lesson-icon">📚</div>
+        <h2 class="lesson-title">Lesson 1</h2>
+        <p class="lesson-description">
+          Kiểu câu linh tinh
+        </p>
+        <button class="start-btn">Bắt đầu học</button>
+      </div>
+      
+      <div class="lesson-card" onclick="goToLesson(2)">
+        <div class="lesson-icon">🖋️</div>
+        <h2 class="lesson-title">Lesson 2</h2>
+        <p class="lesson-description">
+          Thì?
+        </p>
+        <button class="start-btn">Bắt đầu học</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function goToLesson(lessonNumber) {
+      if (lessonNumber === 1) {
+        // Chuyển đến trang bài tập Lesson 1
+        window.location.href = 'lesson1.html';
+      } else if (lessonNumber === 2) {
+        // Chuyển đến trang bài tập Lesson 2
+        window.location.href = 'lesson2.html';
+      }
+    }
+  </script>
+</body>
+</html>
