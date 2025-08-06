@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập Tương tác: Sự Hòa Hợp Giữa Chủ Ngữ và Động Từ</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .exercise-block {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .sentence {
+            font-style: italic;
+            color: #d32f2f;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        .answer-input {
+            width: calc(100% - 24px);
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-top: 5px;
+            transition: border-color 0.3s;
+        }
+        .answer-input.correct {
+            border-color: #28a745;
+            background-color: #f0fff4;
+        }
+        .answer-input.incorrect {
+            border-color: #dc3545;
+            background-color: #fff5f5;
+        }
+        .solution {
+            display: none;
+            margin-top: 10px;
+            padding: 12px;
+            background-color: #e9f5e9;
+            border-left: 4px solid #4CAF50;
+            font-size: 15px;
+        }
+        .solution strong {
+            color: #0056b3;
+        }
+        .check-btn {
+            display: inline-block;
+            width: auto;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .check-btn:hover {
+            background-color: #0056b3;
+        }
+        .check-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #score {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: none;
+        }
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bài tập Tương tác: Tìm và Sửa Lỗi Sai (20 câu)</h1>
+        <p>Đọc kỹ các câu dưới đây, tìm lỗi sai về sự hòa hợp chủ ngữ-động từ và viết lại toàn bộ câu đúng vào ô trống. Sau đó, nhấn nút "Kiểm tra" dưới mỗi câu để kiểm tra đáp án.</p>
+        <h2>Phần 1: Mức độ cơ bản & trung bình</h2>
+        <div class="exercise-block"> 
+            <p><strong>Câu 1:</strong></p> 
+            <p class="sentence">The list of new vocabulary words are on the board.</p> 
+            <label for="ans1">Sửa lại câu:</label> 
+            <input type="text" id="ans1" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans1')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans1"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> The list of new vocabulary words <strong>is</strong> on the board.</p><p><em>Giải thích: Chủ ngữ chính là "The list" (số ít).</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 2:</strong></p> 
+            <p class="sentence">Everybody in the classroom have a textbook.</p> 
+            <label for="ans2">Sửa lại câu:</label> 
+            <input type="text" id="ans2" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans2')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans2"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> Everybody in the classroom <strong>has</strong> a textbook.</p><p><em>Giải thích: "Everybody" là đại từ bất định, luôn là chủ ngữ số ít.</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 3:</strong></p> 
+            <p class="sentence">The news from the front lines sound very encouraging.</p> 
+            <label for="ans3">Sửa lại câu:</label> 
+            <input type="text" id="ans3" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans3')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans3"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> The news from the front lines <strong>sounds</strong> very encouraging.</p><p><em>Giải thích: "News" là danh từ không đếm được, đi với động từ số ít.</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 4:</strong></p> 
+            <p class="sentence">Either my mother or my sisters is coming to the meeting.</p> 
+            <label for="ans4">Sửa lại câu:</label> 
+            <input type="text" id="ans4" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans4')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans4"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> Either my mother or my sisters <strong>are</strong> coming to the meeting.</p><p><em>Giải thích: Với "Either...or...", động từ hòa hợp với chủ ngữ gần nhất ("sisters" - số nhiều).</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 5 (2 lỗi):</strong></p> 
+            <p class="sentence">He don't understand the question, and his friends doesn't either.</p> 
+            <label for="ans5">Sửa lại câu:</label> 
+            <input type="text" id="ans5" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans5')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans5"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> He <strong>doesn't</strong> understand the question, and his friends <strong>don't</strong> either.</p><p><em>Giải thích: "He" (số ít) đi với "doesn't". "His friends" (số nhiều) đi với "don't".</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 6:</strong></p> 
+            <p class="sentence">The dog, along with its puppies, need a new home.</p> 
+            <label for="ans6">Sửa lại câu:</label> 
+            <input type="text" id="ans6" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans6')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans6"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> The dog, along with its puppies, <strong>needs</strong> a new home.</p><p><em>Giải thích: Chủ ngữ chính là "The dog" (số ít). Cụm từ "along with..." không ảnh hưởng.</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 7:</strong></p> 
+            <p class="sentence">There is too many people in this room.</p> 
+            <label for="ans7">Sửa lại câu:</label> 
+            <input type="text" id="ans7" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans7')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans7"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> There <strong>are</strong> too many people in this room.</p><p><em>Giải thích: Động từ "be" hòa hợp với danh từ theo sau ("many people" - số nhiều).</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 8:</strong></p> 
+            <p class="sentence">The police is investigating the crime.</p> 
+            <label for="ans8">Sửa lại câu:</label> 
+            <input type="text" id="ans8" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans8')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans8"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> The police <strong>are</strong> investigating the crime.</p><p><em>Giải thích: "Police" là danh từ tập hợp luôn đi với động từ số nhiều.</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 9 (2 lỗi):</strong></p> 
+            <p class="sentence">My favorite type of movies are comedies, but my brother prefer dramas.</p> 
+            <label for="ans9">Sửa lại câu:</label> 
+            <input type="text" id="ans9" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans9')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans9"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> My favorite type of movies <strong>is</strong> comedies, but my brother <strong>prefers</strong> dramas.</p><p><em>Giải thích: Chủ ngữ "type" (số ít) -> "is". Chủ ngữ "brother" (số ít) -> "prefers".</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 10:</strong></p> 
+            <p class="sentence">Fifty dollars are too much to pay for that shirt.</p> 
+            <label for="ans10">Sửa lại câu:</label> 
+            <input type="text" id="ans10" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans10')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans10"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> Fifty dollars <strong>is</strong> too much to pay for that shirt.</p><p><em>Giải thích: Khi một cụm từ chỉ tiền bạc được xem như một khối/khoản duy nhất, nó đi với động từ số ít.</em></p></div> 
+        </div>
+        <h2>Phần 2: Mức độ phức tạp</h2>
+        <div class="exercise-block"> 
+            <p><strong>Câu 11 (2 lỗi):</strong></p> 
+            <p class="sentence">The number of employees who has resigned this year are alarming.</p> 
+            <label for="ans11">Sửa lại câu:</label> 
+            <input type="text" id="ans11" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans11')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans11"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> The number of employees who <strong>have</strong> resigned this year <strong>is</strong> alarming.</p><p><em>Giải thích: "who" thay cho "employees" (số nhiều) -> "have". Chủ ngữ chính "The number" (số ít) -> "is".</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 12:</strong></p> 
+            <p class="sentence">A number of factors contributing to the problem has been identified.</p> 
+            <label for="ans12">Sửa lại câu:</label> 
+            <input type="text" id="ans12" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans12')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans12"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> A number of factors contributing to the problem <strong>have</strong> been identified.</p><p><em>Giải thích: Cấu trúc "A number of" luôn đi với động từ số nhiều.</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 13:</strong></p> 
+            <p class="sentence">The quality of the products, as well as the reliability of the service, have decreased.</p> 
+            <label for="ans13">Sửa lại câu:</label> 
+            <input type="text" id="ans13" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans13')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans13"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> The quality of the products, as well as the reliability of the service, <strong>has</strong> decreased.</p><p><em>Giải thích: Chủ ngữ chính là "The quality" (số ít). Cụm từ "as well as..." không ảnh hưởng.</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 14:</strong></p> 
+            <p class="sentence">One of the main reasons for the delay are the bad weather.</p> 
+            <label for="ans14">Sửa lại câu:</label> 
+            <input type="text" id="ans14" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans14')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans14"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> One of the main reasons for the delay <strong>is</strong> the bad weather.</p><p><em>Giải thích: Chủ ngữ chính là "One" (số ít).</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 15:</strong></p> 
+            <p class="sentence">Mathematics, to many students, seem very difficult.</p> 
+            <label for="ans15">Sửa lại câu:</label> 
+            <input type="text" id="ans15" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans15')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans15"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> Mathematics, to many students, <strong>seems</strong> very difficult.</p><p><em>Giải thích: "Mathematics" là tên một môn học, là danh từ số ít.</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 16 (2 lỗi):</strong></p> 
+            <p class="sentence">Each of the students have their own project, and it need to be submitted by Friday.</p> 
+            <label for="ans16">Sửa lại câu:</label> 
+            <input type="text" id="ans16" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans16')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans16"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> Each of the students <strong>has</strong> his or her own project, and it <strong>needs</strong> to be submitted by Friday.</p><p><em>Giải thích: "Each" (số ít) -> "has". "it" (số ít) -> "needs". (Lưu ý: "their" thường được chấp nhận trong văn nói, nhưng "his or her" chặt chẽ hơn về ngữ pháp).</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 17 (2 lỗi):</strong></p> 
+            <p class="sentence">The effects of climate change, which impacts communities worldwide, is a topic of global concern.</p> 
+            <label for="ans17">Sửa lại câu:</label> 
+            <input type="text" id="ans17" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans17')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans17"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> The effects of climate change, which <strong>impact</strong> communities worldwide, <strong>are</strong> a topic of global concern.</p><p><em>Giải thích: "which" thay cho "effects" (số nhiều) -> "impact". Chủ ngữ chính "The effects" (số nhiều) -> "are".</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 18 (2 lỗi):</strong></p> 
+            <p class="sentence">The committee, after many hours of discussion, have finally announced their decisions as a single unit.</p> 
+            <label for="ans18">Sửa lại câu:</label> 
+            <input type="text" id="ans18" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans18')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans18"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> The committee, after many hours of discussion, <strong>has</strong> finally announced <strong>its</strong> decision as a single unit.</p><p><em>Giải thích: "Committee" là một đơn vị (số ít) -> "has" và đại từ "its".</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 19:</strong></p> 
+            <p class="sentence">Reading books and listening to music is my two favorite ways to relax.</p> 
+            <label for="ans19">Sửa lại câu:</label> 
+            <input type="text" id="ans19" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans19')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans19"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> Reading books and listening to music <strong>are</strong> my two favorite ways to relax.</p><p><em>Giải thích: Hai hành động nối bằng "and" tạo thành chủ ngữ số nhiều.</em></p></div> 
+        </div>
+        <div class="exercise-block"> 
+            <p><strong>Câu 20 (3 lỗi):</strong></p> 
+            <p class="sentence">Neither the detailed report, which contain lots of charts, nor the summary were able to convince the board to change their decision.</p> 
+            <label for="ans20">Sửa lại câu:</label> 
+            <input type="text" id="ans20" class="answer-input" placeholder="Viết lại cả câu đúng..."> 
+            <button class="check-btn" onclick="checkSingleAnswer('ans20')">Kiểm tra</button>
+            <div class="feedback" id="feedback-ans20"></div>
+            <div class="solution"><p><strong>Câu đúng:</strong> Neither the detailed report, which <strong>contains</strong> lots of charts, nor the summary <strong>was</strong> able to convince the board to change <strong>its</strong> decision.</p><p><em>Giải thích: "report" (số ít) -> "contains"; "summary" (số ít) là chủ ngữ gần nhất -> "was"; "board" là một đơn vị -> "its".</em></p></div> 
+        </div>
+        <div id="score"></div>
+        <button id="check-answers-btn" onclick="checkAnswers()">Kiểm tra tất cả đáp án</button>
+    </div>
+    <script>
+        const solutions = {
+            ans1: "The list of new vocabulary words is on the board.",
+            ans2: "Everybody in the classroom has a textbook.",
+            ans3: "The news from the front lines sounds very encouraging.",
+            ans4: "Either my mother or my sisters are coming to the meeting.",
+            ans5: "He doesn't understand the question, and his friends don't either.",
+            ans6: "The dog, along with its puppies, needs a new home.",
+            ans7: "There are too many people in this room.",
+            ans8: "The police are investigating the crime.",
+            ans9: "My favorite type of movies is comedies, but my brother prefers dramas.",
+            ans10: "Fifty dollars is too much to pay for that shirt.",
+            ans11: "The number of employees who have resigned this year is alarming.",
+            ans12: "A number of factors contributing to the problem have been identified.",
+            ans13: "The quality of the products, as well as the reliability of the service, has decreased.",
+            ans14: "One of the main reasons for the delay is the bad weather.",
+            ans15: "Mathematics, to many students, seems very difficult.",
+            ans16: "Each of the students has his or her own project, and it needs to be submitted by Friday.",
+            ans17: "The effects of climate change, which impact communities worldwide, are a topic of global concern.",
+            ans18: "The committee, after many hours of discussion, has finally announced its decision as a single unit.",
+            ans19: "Reading books and listening to music are my two favorite ways to relax.",
+            ans20: "Neither the detailed report, which contains lots of charts, nor the summary was able to convince the board to change its decision."
+        };
+        
+        function checkSingleAnswer(id) {
+            const inputElement = document.getElementById(id);
+            const solutionDiv = inputElement.parentElement.querySelector('.solution');
+            const feedbackElement = document.getElementById(`feedback-${id}`);
+            const buttonElement = inputElement.nextElementSibling;
+            const correctAnswer = solutions[id];
+            
+            // Normalize answers by trimming, removing trailing periods, and making lowercase
+            const userAnswer = inputElement.value.trim().replace(/\.?$/, '').toLowerCase();
+            const normalizedCorrectAnswer = correctAnswer.trim().replace(/\.?$/, '').toLowerCase();
+            
+            // A special check for question 16 to allow "their"
+            let isCorrect = (userAnswer === normalizedCorrectAnswer);
+            if (id === 'ans16') {
+                const alternativeAnswer = "each of the students has their own project, and it needs to be submitted by friday.";
+                if (userAnswer === alternativeAnswer) {
+                    isCorrect = true;
+                }
+            }
+            
+            inputElement.classList.remove('correct', 'incorrect');
+            feedbackElement.classList.remove('correct', 'incorrect');
+            
+            if (isCorrect) {
+                inputElement.classList.add('correct');
+                feedbackElement.textContent = "✓ Chính xác!";
+                feedbackElement.classList.add('correct');
+                solutionDiv.style.display = 'none';
+                buttonElement.textContent = 'Đã kiểm tra';
+                buttonElement.disabled = true;
+            } else {
+                inputElement.classList.add('incorrect');
+                feedbackElement.textContent = "✗ Chưa chính xác, vui lòng thử lại!";
+                feedbackElement.classList.add('incorrect');
+                solutionDiv.style.display = 'block';
+            }
+        }
+        
+        function checkAnswers() {
+            let correctCount = 0;
+            const totalQuestions = Object.keys(solutions).length;
+            
+            for (const id in solutions) {
+                if (solutions.hasOwnProperty(id)) {
+                    const inputElement = document.getElementById(id);
+                    const solutionDiv = inputElement.parentElement.querySelector('.solution');
+                    const feedbackElement = document.getElementById(`feedback-${id}`);
+                    const buttonElement = inputElement.nextElementSibling;
+                    const correctAnswer = solutions[id];
+                    
+                    // Normalize answers by trimming, removing trailing periods, and making lowercase
+                    const userAnswer = inputElement.value.trim().replace(/\.?$/, '').toLowerCase();
+                    const normalizedCorrectAnswer = correctAnswer.trim().replace(/\.?$/, '').toLowerCase();
+                    
+                    // A special check for question 16 to allow "their"
+                    let isCorrect = (userAnswer === normalizedCorrectAnswer);
+                    if (id === 'ans16') {
+                        const alternativeAnswer = "each of the students has their own project, and it needs to be submitted by friday.";
+                        if (userAnswer === alternativeAnswer) {
+                            isCorrect = true;
+                        }
+                    }
+                    
+                    inputElement.classList.remove('correct', 'incorrect');
+                    feedbackElement.classList.remove('correct', 'incorrect');
+                    
+                    if (isCorrect) {
+                        inputElement.classList.add('correct');
+                        feedbackElement.textContent = "✓ Chính xác!";
+                        feedbackElement.classList.add('correct');
+                        solutionDiv.style.display = 'none';
+                        buttonElement.textContent = 'Đã kiểm tra';
+                        buttonElement.disabled = true;
+                        correctCount++;
+                    } else {
+                        inputElement.classList.add('incorrect');
+                        feedbackElement.textContent = "✗ Chưa chính xác!";
+                        feedbackElement.classList.add('incorrect');
+                        solutionDiv.style.display = 'block';
+                        buttonElement.disabled = false;
+                    }
+                }
+            }
+            
+            const scoreElement = document.getElementById('score');
+            scoreElement.innerHTML = `Kết quả: Bạn đã trả lời đúng ${correctCount} / ${totalQuestions} câu.`;
+            scoreElement.style.display = 'block';
+            
+            const button = document.getElementById('check-answers-btn');
+            button.textContent = 'Đã kiểm tra tất cả';
+            button.disabled = true;
+        }
+    </script>
+</body>
+</html>
