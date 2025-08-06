@@ -133,6 +133,15 @@
     <p class="subtitle">Tiếng Anh là nghề phụ coder mới là chính</p>
     
     <div class="lessons-container">
+      <div class="lesson-card" onclick="goToLesson(0)">
+        <div class="lesson-icon">🌟</div>
+        <h2 class="lesson-title">Lesson 0</h2>
+        <p class="lesson-description">
+          Giới thiệu cơ bản
+        </p>
+        <button class="start-btn">Bắt đầu học</button>
+      </div>
+      
       <div class="lesson-card" onclick="goToLesson(1)">
         <div class="lesson-icon">📚</div>
         <h2 class="lesson-title">Lesson 1</h2>
@@ -152,10 +161,12 @@
       </div>
     </div>
   </div>
-
   <script>
     function goToLesson(lessonNumber) {
-      if (lessonNumber === 1) {
+      if (lessonNumber === 0) {
+        // Chuyển đến trang bài tập Lesson 0
+        window.location.href = 'lesson0.html';
+      } else if (lessonNumber === 1) {
         // Chuyển đến trang bài tập Lesson 1
         window.location.href = 'lesson1.html';
       } else if (lessonNumber === 2) {
