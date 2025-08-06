@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verb Tenses Practice - Interactive Exercises</title>
+    <title>Lesson 2 - Verb Tenses Practice</title>
     <style>
         * {
             box-sizing: border-box;
@@ -69,6 +69,12 @@
             font-size: 16px;
             width: 150px;
             margin: 0 5px;
+        }
+        
+        .answer-input::placeholder {
+            color: #7f8c8d;
+            font-style: italic;
+            opacity: 0.8;
         }
         
         .buttons {
@@ -153,6 +159,23 @@
             font-size: 14px;
         }
         
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            text-decoration: none;
+        }
+        
+        .back-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -166,7 +189,9 @@
 </head>
 <body>
     <div class="container">
-        <h1>Verb Tenses Practice</h1>
+        <a href="index.html" class="back-btn">← Quay lại trang chủ</a>
+        
+        <h1>Lesson 2 - Verb Tenses Practice</h1>
         <div class="intro">
             <p>Complete the sentences with the correct verb tenses. Type your answers in the input fields and click "Check" to verify.</p>
         </div>
@@ -185,7 +210,6 @@
             <button class="reset-btn" onclick="resetAllAnswers()">Reset All</button>
         </div>
     </div>
-
     <script>
         // Exercise data with sentences and correct answers
         const exercises = [
@@ -340,7 +364,7 @@
                 explanation: "Present Continuous for current trends, Future Simple for predicted consequences."
             }
         ];
-
+        
         // Initialize the page
         function init() {
             const container = document.getElementById('exercises-container');
@@ -351,28 +375,16 @@
                 exerciseDiv.className = 'exercise';
                 exerciseDiv.id = `exercise-${index}`;
                 
-                // Process the sentence to create input fields
-                let processedSentence = exercise.sentence;
-                const blankPlaceholders = [];
-                
-                // Replace each blank with a placeholder
-                for (let i = 0; i < exercise.blanks.length; i++) {
-                    const placeholder = `___BLANK_${i}___`;
-                    blankPlaceholders.push(placeholder);
-                    processedSentence = processedSentence.replace(/\(([^)]+)\)/, placeholder);
-                }
-                
-                // Create the sentence HTML with input fields
+                // Process the sentence to create input fields with verb hints
                 let sentenceHTML = '<div class="sentence">';
-                const parts = processedSentence.split(/(___BLANK_\d+___)/);
+                let tempSentence = exercise.sentence;
+                let blankIndex = 0;
                 
-                parts.forEach(part => {
-                    if (part.startsWith('___BLANK_') && part.endsWith('___')) {
-                        const blankIndex = parseInt(part.match(/\d+/)[0]);
-                        sentenceHTML += `<input type="text" class="answer-input" id="answer-${index}-${blankIndex}" placeholder="">`;
-                    } else {
-                        sentenceHTML += part;
-                    }
+                // Replace each parenthesized verb with an input field
+                sentenceHTML += tempSentence.replace(/\(([^)]+)\)/g, (match, verb) => {
+                    const inputId = `answer-${index}-${blankIndex}`;
+                    blankIndex++;
+                    return `<input type="text" class="answer-input" id="${inputId}" placeholder="${verb}">`;
                 });
                 
                 sentenceHTML += '</div>';
@@ -399,7 +411,7 @@
             // Update total score
             document.getElementById('total').textContent = exercises.length;
         }
-
+        
         // Check a single answer
         function checkAnswer(exerciseIndex) {
             const exercise = exercises[exerciseIndex];
@@ -435,7 +447,7 @@
             feedbackDiv.style.display = 'block';
             updateScore();
         }
-
+        
         // Show the correct answer for a single exercise
         function showAnswer(exerciseIndex) {
             const exercise = exercises[exerciseIndex];
@@ -454,7 +466,7 @@
             
             updateScore();
         }
-
+        
         // Reset a single exercise
         function resetAnswer(exerciseIndex) {
             const exercise = exercises[exerciseIndex];
@@ -471,28 +483,28 @@
             
             updateScore();
         }
-
+        
         // Check all answers
         function checkAllAnswers() {
             for (let i = 0; i < exercises.length; i++) {
                 checkAnswer(i);
             }
         }
-
+        
         // Show all answers
         function showAllAnswers() {
             for (let i = 0; i < exercises.length; i++) {
                 showAnswer(i);
             }
         }
-
+        
         // Reset all answers
         function resetAllAnswers() {
             for (let i = 0; i < exercises.length; i++) {
                 resetAnswer(i);
             }
         }
-
+        
         // Update the score
         function updateScore() {
             let correctCount = 0;
@@ -519,7 +531,7 @@
             
             document.getElementById('score').textContent = correctCount;
         }
-
+        
         // Initialize the page when loaded
         window.onload = init;
     </script>
